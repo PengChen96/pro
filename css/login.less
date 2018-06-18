@@ -1,0 +1,133 @@
+
+body{
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.c-login-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width:100%;
+  height: 100%;
+  background: url("../img/timg.jpg") 100%/100% no-repeat;
+  .c-login-box{
+    position: relative;
+    margin-top: -2rem;
+    width: 6rem;
+    height: 7rem;
+    .c-login-bg{
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: #40362c;
+      opacity: 0.8;
+      border-radius: 8px;
+    }
+    .c-main-box{
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      .c-title-box{
+        width:100%;
+        height: 1.25rem;
+        .c-p1{
+          padding: 0;
+          margin: 0.25rem 0 0;
+          text-align: center;
+          line-height: 36px;
+          font-size: 28px;
+          color: #b8a667;
+        }
+        .c-p2{
+          padding: 0;
+          margin: 0;
+          text-align: center;
+          font-size: 14px;
+          color:#5c513e;
+        }
+      }
+      .c-form-box{
+        width:100%;
+        height: 4.75rem;
+        //background: red;
+        .c-form-item{
+          margin-left: 0.3rem;
+          display: flex;
+          width:90%;
+          height: 1rem;
+          //background: #fff;
+          border-bottom: 1px solid #92846e;
+          .c-icon-item{
+            min-width: 1.5rem;
+            font-size: 16px;
+            line-height: 1rem;
+            padding-left: 3px;
+            color: #fff;
+          }
+          .c-input{
+            width:100%;
+            height:1rem;
+            box-sizing: border-box;
+            padding: 0px 12px;
+            input{
+              width: 100%;
+              height: 1rem;
+              font-size: 16px;
+              padding: 0;
+              border:none;
+              outline: none;
+              background: transparent;
+              color: #fff;
+            }
+          }
+        }
+        .c-log-reg-box{
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          width:90%;
+          margin-left: 5%;
+          height: 1.2rem;
+          //background: red;
+          .c-btn-login{
+            width:45%;
+            height:0.9rem;
+            line-height: 0.9rem;
+            background: #fda900;
+            border-radius: 4px;
+            color: #333;
+            font-size: 16px;
+            text-align: center;
+          }
+          .c-btn-reg{
+            width:45%;
+            height:0.9rem;
+            line-height: 0.9rem;
+            background: #f11500;
+            border-radius: 4px;
+            color:#fff;
+            font-size: 16px;
+            text-align: center;
+          }
+        }
+        .c-free-box{
+          display: flex;
+          justify-content: space-around;
+          width:50%;
+          margin-left: 25%;
+          height:0.8rem;
+          line-height: 0.8rem;
+          //background: red;
+          color: #cdae59;
+        }
+      }
+    }
+  }
+}

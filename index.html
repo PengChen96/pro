@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>首页</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/fontsize.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!--菜单-->
+        <div class="c-menu-fixed-container" v-if="menuVisible">
+            <div class="c-menu-box">
+                <div class="c-menu-item">
+                    <img src="./img/zhankai.png" alt="">
+                </div>
+                <div class="c-menu-item">
+                    <img src="./img/xzjl.png" alt="">
+                </div>
+                <div class="c-menu-item">
+                    <img src="./img/czjl.png" alt="">
+                </div>
+                <div class="c-menu-item">
+                    <img src="./img/guize.png" alt="">
+                </div>
+                <div class="c-menu-item">
+                    <img src="./img/exit.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!--模态框-->
+        <div class="c-modal-fixed-container" v-if="modalVisible">
+            <div class="c-modal-bg" @click="hideSelectJetton()"></div>
+            <div class="c-modal-box">
+                <div class="c-jetton-item-box">
+                    <div class="c-jetton-item" v-for="x in 8">
+                        <img src="./img/10.png" alt="">
+                    </div>
+                </div>
+                <div class="c-jetton-add" @click="hideSelectJetton()">
+                    <img src="./img/add.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!---->
+        <div class="c-container">
+            <div class="c-top-container">
+                <div class="c-top-title-box">
+                    <div class="c-top-title-left-box">
+                        <div class="c-product-name">
+                            鱼虾蟹
+                        </div>
+                        <div class="c-user-name">
+                            admin12345
+                        </div>
+                    </div>
+                    <div class="c-top-title-mid-box">
+                        <img src="./img/clock.png" alt="">
+                    </div>
+                    <div class="c-top-title-right-box">
+                        <div class="c-product-money">
+                            ￥0.00
+                        </div>
+                        <div class="c-user-money">
+                            ￥0.00
+                        </div>
+                    </div>
+                </div>
+                <div class="c-top-video-box">
+                    video
+                </div>
+            </div>
+            <div class="c-bottom-container">
+                <div class="c-game-container">
+                    <div class="c-menu-jetton-box">
+                        <div class="c-menu-setting-box">
+                            <div class="c-menu-setting-btn" @click="showMenu()" style="z-index: 10;">
+                                <img src="./img/menu.png" alt="">
+                            </div>
+                            <div class="c-menu-setting-btn" @click="showJettonModal()">
+                                <img src="./img/setting.png" alt="">
+                            </div>
+                        </div>
+                        <div class="c-jetton-box">
+                            <div class="c-jetton-item" v-for="x in jettonArr">
+                                <img :src=`./img/${x}.png` alt="" @click="addJetton(x)">
+                                <!--<img :src=`./img/10.png` alt="">-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-game-main-box">
+                        <div class="c-game-btn-box">
+                            <div class="c-game-btn" @click="showSwiper(1,2)">
+                                <img src="./img/nuo.png" alt="">
+                            </div>
+                            <div class="c-game-btn" @click="showSwiper(2,1)">
+                                <img src="./img/baozi.png" alt="">
+                            </div>
+                            <div class="c-game-btn" @click="showSwiper(3,2)">
+                                <img src="./img/lianchuan.png" alt="">
+                            </div>
+                        </div>
+                        <el-checkbox-group v-model="checkList" @change="chcekBoxChange" :max="checkboxMaxValue">
+                            <div class="c-game-item-box">
+                                <div class="c-game-item" v-for="x in gameObjArr" @click="focusGame(x.index)">
+                                    <div class="c-game-word">{{x.name}}</div>
+                                    <div class="c-game-img-grade-box">
+                                        <div class="c-game-img">
+                                            <img :src=`./img/${x.icon}.png` alt="">
+                                        </div>
+                                        <div class="c-game-grade">
+                                            <div class="c-text">{{x.valOne}}</div>
+                                            <div class="c-text" style="color:#8f1816;">{{x.valTwo}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="c-check-box">
+                                        <div  v-if="swiperVisible" style="overflow: hidden">
+                                            <!--<el-checkbox-group v-model="checkList">-->
+                                                <el-checkbox :label="x.index" ></el-checkbox>
+                                            <!--</el-checkbox-group>-->
+                                            <!--<input type="checkbox" :value="x.name" @change="checkboxChange(this)" name="checkbox">-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-checkbox-group>
+                    </div>
+                </div>
+                <div class="c-game-info-container">
+                    <div class="c-game-detail-box">
+                        <div class="c-swiper" v-show="swiperVisible">
+                            <div class="c-cancel" @click="cancelSwiper()">取消</div>
+                            <div style="width: 60%;">
+                                <div class="block">
+                                    <el-slider v-model="value" :min="0" :max="sliderMaxValue"></el-slider>
+                                </div>
+                            </div>
+                            <div class="c-confirm" @click="confirmSwiper()">确定</div>
+                        </div>
+                        <div class="c-game-detail-title">
+                            <img src="./img/xzxq.png" alt="" onclick="javascript:return false;">
+                        </div>
+                    </div>
+                    <div class="c-game-stake-container">
+                        <div class="c-game-stake-item-box" v-for="x in 2">
+                            <div class="c-user-portrait">
+                                <img src="./img/portrait.jpg" alt="">
+                                <div class="c-user-game-name">
+                                    FF
+                                </div>
+                            </div>
+                            <div class="c-stake-item-box">
+                                <div class="c-stake-item" v-for="x in 3">
+                                    <div class="c-stake-name">
+                                        <div>单押</div>
+                                        <div style="color: #945340">500</div>
+                                    </div>
+                                    <div class="c-stake-one">
+                                        <img src="./img/hu.png" alt="">
+                                    </div>
+                                    <div class="c-stake-one">
+                                        <img src="./img/hu.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                menuVisible: false,   // 显示菜单
+                swiperVisible: false, // 显示滑块
+                modalVisible: false,  // 显示模态框
+                // 当前点击的 “虎 芦 狮 蟹 鱼 虾” index
+                gameIndex: -1,  // 默认
+                // 筹码数组
+                jettonArr: ['2', '10', '50', '2', '10', '50'],
+                // 虎 芦 狮 蟹 鱼 虾
+                gameObjArr: [
+                    {index:0,name:'虎',icon:'hu',valOne:0,valTwo:0},
+                    {index:1,name:'芦',icon:'lu',valOne:0,valTwo:0},
+                    {index:2,name:'狮',icon:'shi',valOne:0,valTwo:0},
+                    {index:3,name:'蟹',icon:'xie',valOne:0,valTwo:0},
+                    {index:4,name:'鱼',icon:'yu',valOne:0,valTwo:0},
+                    {index:5,name:'虾',icon:'xia',valOne:0,valTwo:0},
+                ],
+                gameStatus: 0,      // 1: 挪  2：豹子  3：连串
+                value: 0,           // 滑块的值
+                sliderMaxValue: 1,// 滑块最大的值
+                checkList: [],      // 多选框
+                checkboxMaxValue: 1,// 多选框最多能选几个
+            },
+            created (){
+
+            },
+            methods: {
+                // 菜单
+                showMenu () {
+                    if (this.menuVisible) {
+                        this.menuVisible = false;
+                    } else {
+                        this.menuVisible = true;
+                    }
+                },
+                hideMenu () {
+                    this.menuVisible = false;
+                },
+                // 模态框
+                showJettonModal () {
+                    this.modalVisible = true;
+                },
+                hideSelectJetton () {
+                    this.modalVisible = false;
+                },
+                // 显示滑块
+                showSwiper (gameStatus, checkboxMaxValue) {
+                    this.swiperVisible = true;  // 滑块
+                    this.gameStatus = gameStatus;        // 1: 挪  2：豹子  3：连串
+                    this.checkList = [];        // 多选框
+                    this.checkboxMaxValue = checkboxMaxValue;  // 只能选一个
+                },
+                // 滑块
+                cancelSwiper () {
+                    this.swiperVisible = false;
+                    this.gameStatus = 0;
+                },
+                // chcekBox change
+                chcekBoxChange (value) {
+                    console.log(value);
+                    console.log(this.checkList);
+                    if(this.checkList.length == 0){
+                        return;
+                    }
+                    var sliderMaxValue = this.gameObjArr[this.checkList[0]].valTwo;
+                    console.log(sliderMaxValue);
+                    if (sliderMaxValue) {
+                        this.sliderMaxValue = sliderMaxValue;
+                    } else {
+                        this.sliderMaxValue = 1;
+                    }
+                },
+                // 确定 投注 挪注 豹子
+                confirmSwiper () {
+                    console.log(this.checkList);
+                    let len = this.checkList.length;
+                    if (this.gameStatus == 1) {
+                        if(len<2){
+                            this.$message({
+                                message: '请选择进行挪注！',
+                                type: 'warning'
+                            })
+                            return;
+                        }
+                        if(len==2){
+                            this.gameObjArr[this.checkList[0]].valTwo -= this.value;
+                            this.gameObjArr[this.checkList[1]].valTwo += this.value;
+                            this.$message({
+                                message: '挪注成功！',
+                                type: 'success'
+                            })
+                        }
+                    }
+                    if (this.gameStatus == 2) {
+                        if(len<1){
+                            this.$message({
+                                message: '请选择进行投注！',
+                                type: 'warning'
+                            })
+                            return;
+                        }
+                        var v1 = this.gameObjArr[this.checkList[0]].valTwo;
+                        if(v1==0){
+                            this.$message({
+                                message: '没有该注！',
+                                type: 'warning'
+                            })
+                            return;
+                        }
+                        if(len==1&&v1!=0){
+                            this.$message({
+                                message: '投注成功！',
+                                type: 'success'
+                            })
+                        }
+                    }
+                    if (this.gameStatus == 3) {
+                        if(len<2){
+                            this.$message({
+                                message: '请选择进行连串！',
+                                type: 'warning'
+                            })
+                            return;
+                        }
+                        var v1 = this.gameObjArr[this.checkList[0]].valTwo;
+                        var v2 = this.gameObjArr[this.checkList[1]].valTwo;
+                        if(v1==0||v2==0){
+                            this.$message({
+                                message: '没有该注！',
+                                type: 'warning'
+                            })
+                            return;
+                        }
+                        if(len==2&&v1!=0&&v2!==0){
+                            this.$message({
+                                message: '连串成功！',
+                                type: 'success'
+                            })
+                        }
+                    }
+                    this.swiperVisible = false;
+                },
+                // 选择项目
+                focusGame (index) {
+                    console.log(index);
+                    this.gameIndex = index;
+                },
+                // 下注
+                addJetton (value) {
+                    // 当前没有点击项目
+                    if(this.gameIndex==-1){
+                        this.$message({
+                            message: '请先点击要投注的项目！',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.gameObjArr[this.gameIndex].valOne += parseInt(value);
+                    this.gameObjArr[this.gameIndex].valTwo += parseInt(value);
+                    console.log(value);
+                },
+                // 挪
+                nuoFun () {
+                    this.swiperVisible = true;  // 滑块
+                    this.gameStatus = 1;        // 1: 挪  2：豹子  3：连串
+                    this.checkList = [];        // 多选框
+                    this.checkboxMaxValue = 2;  // 只能选一个
+                },
+                // 豹子
+                baoziFun () {
+                    this.swiperVisible = true;  // 滑块
+                    this.gameStatus = 2;        // 1: 挪  2：豹子  3：连串
+                    this.checkList = [];        // 多选框
+                    this.checkboxMaxValue = 1;  // 只能选一个
+                },
+                // 连串
+                lianchuanFun () {
+                    this.swiperVisible = true;  // 滑块
+                    this.gameStatus = 3;        // 1: 挪  2：豹子  3：连串
+                    this.checkList = [];        // 多选框
+                    this.checkboxMaxValue = 2;  // 只能选一个
+                }
+            }
+        })
+    </script>
+</body>
+</html>
