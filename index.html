@@ -36,14 +36,14 @@
         </div>
         <!--模态框-->
         <div class="c-modal-fixed-container" v-if="modalVisible">
-            <div class="c-modal-bg" @click="hideSelectJetton()"></div>
+            <div class="c-modal-bg" @click="hideJettonModal()"></div>
             <div class="c-modal-box">
                 <div class="c-jetton-item-box">
-                    <div class="c-jetton-item" v-for="x in 8">
-                        <img src="./img/10.png" alt="">
+                    <div class="c-jetton-item" v-for="(x,index) in jettonSettingArr">
+                        <img :src=`./img/${x}.png` alt="" @click="selectJetton(x,index)" :class="isIncludes(index)?'c-active':''">
                     </div>
                 </div>
-                <div class="c-jetton-add" @click="hideSelectJetton()">
+                <div class="c-jetton-add" @click="saveSelectJetton()">
                     <img src="./img/add.png" alt="">
                 </div>
             </div>
@@ -88,8 +88,8 @@
                             </div>
                         </div>
                         <div class="c-jetton-box">
-                            <div class="c-jetton-item" v-for="x in jettonArr">
-                                <img :src=`./img/${x}.png` alt="" @click="addJetton(x)">
+                            <div class="c-jetton-item" v-for="(x,index) in jettonArr">
+                                <img :src=`./img/${x}.png` alt="" @click="addJetton(x,index)" :class="index == selectindex ? 'c-active':'' ">
                                 <!--<img :src=`./img/10.png` alt="">-->
                             </div>
                         </div>
@@ -185,6 +185,14 @@
                 modalVisible: false,  // 显示模态框
                 // 当前点击的 “虎 芦 狮 蟹 鱼 虾” index
                 gameIndex: -1,  // 默认
+                // 筹码设置里的筹码数组
+                jettonSettingArr: ['2', '10', '50', '2', '10', '50'],
+                // 点击选择的筹码数组
+                jettonSetSelectedArr: [],
+                // 点击选择的坐标
+                jettonSetSelectedIndexArr: [],
+                // 当前点击的筹码index
+                selectindex: -1,
                 // 筹码数组
                 jettonArr: ['2', '10', '50', '2', '10', '50'],
                 // 虎 芦 狮 蟹 鱼 虾
@@ -221,7 +229,45 @@
                 showJettonModal () {
                     this.modalVisible = true;
                 },
-                hideSelectJetton () {
+                hideJettonModal () {
+                    this.modalVisible = false;
+                },
+                selectJetton (x, index) {
+                    var val = this.jettonSetSelectedArr[index];
+                    if(val){
+                        delete this.jettonSetSelectedArr[index];
+                        delete this.jettonSetSelectedIndexArr[index];
+                        this.jettonSetSelectedIndexArr = JSON.parse(JSON.stringify(this.jettonSetSelectedIndexArr))
+                    } else {
+                        this.jettonSetSelectedArr[index] = x;
+                        this.jettonSetSelectedIndexArr[index] = index;
+                        this.jettonSetSelectedIndexArr = JSON.parse(JSON.stringify(this.jettonSetSelectedIndexArr))
+                    }
+
+                    console.log(this.jettonSetSelectedArr);
+                    console.log(this.jettonSetSelectedIndexArr);
+                },
+                isIncludes (index) {
+                    var flag = this.jettonSetSelectedIndexArr.includes(index);
+                    return flag;
+                },
+                saveSelectJetton () {
+                    var arr = [];
+                    var j_arr = this.jettonSetSelectedArr;
+                    for (var i=0;i<j_arr.length;i++) {
+                        if(j_arr[i]!=null&&j_arr[i]!=undefined){
+                            arr.push(j_arr[i]);
+                        }
+                    }
+                    if (arr.length<4) {
+                        this.$message({
+                            message: '最少选择4个！',
+                            type: 'warning'
+                        })
+                        return;
+                    } else {
+                        this.jettonArr = JSON.parse(JSON.stringify(arr));
+                    }
                     this.modalVisible = false;
                 },
                 // 显示滑块
@@ -327,7 +373,9 @@
                     this.gameIndex = index;
                 },
                 // 下注
-                addJetton (value) {
+                addJetton (value,index) {
+                    console.log(index);
+                    this.selectindex = index;
                     // 当前没有点击项目
                     if(this.gameIndex==-1){
                         this.$message({
