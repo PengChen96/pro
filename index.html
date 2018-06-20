@@ -215,6 +215,8 @@
                 modalVisible: false,  // 显示模态框
                 // 当前点击的 “虎 芦 狮 蟹 鱼 虾” index
                 gameIndex: -1,  // 默认
+                // 选定筹码
+                jettonValue: 0,
                 // 筹码设置里的筹码数组
                 jettonSettingArr: ['2', '10', '50', '2', '10', '50'],
                 // 点击选择的筹码数组
@@ -399,24 +401,34 @@
                 },
                 // 选择项目
                 focusGame (index) {
-                    console.log(index);
-                    this.gameIndex = index;
-                },
-                // 下注
-                addJetton (value,index) {
-                    console.log(index);
-                    this.selectindex = index;
-                    // 当前没有点击项目
-                    if(this.gameIndex==-1){
+                    // console.log(index);
+                    // this.gameIndex = index;
+                    if(this.jettonValue==0){  //没选择筹码
                         this.$message({
-                            message: '请先点击要投注的项目！',
+                            message: '请先选择筹码！',
                             type: 'warning'
                         });
                         return;
                     }
-                    this.gameObjArr[this.gameIndex].valOne += parseInt(value);
-                    this.gameObjArr[this.gameIndex].valTwo += parseInt(value);
-                    console.log(value);
+                    this.gameObjArr[index].valOne += parseInt(this.jettonValue);
+                    this.gameObjArr[index].valTwo += parseInt(this.jettonValue);
+                },
+                // 下注 选择筹码
+                addJetton (value,index) {
+                    this.jettonValue = value;
+                    // console.log(index);
+                    this.selectindex = index;
+                    // // 当前没有点击项目
+                    // if(this.gameIndex==-1){
+                    //     this.$message({
+                    //         message: '请先点击要投注的项目！',
+                    //         type: 'warning'
+                    //     });
+                    //     return;
+                    // }
+                    // this.gameObjArr[this.gameIndex].valOne += parseInt(value);
+                    // this.gameObjArr[this.gameIndex].valTwo += parseInt(value);
+                    // console.log(value);
                 },
                 // 挪
                 nuoFun () {
@@ -443,19 +455,21 @@
         })
     </script>
     <script type="text/javascript">
-        document.documentElement.addEventListener('touchstart', function (event) {
-          if (event.touches.length > 1) {
-            event.preventDefault();
-          }
-        }, false);
-        var lastTouchEnd = 0;
-        document.documentElement.addEventListener('touchend', function (event) {
-          var now = Date.now();
-          if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-          }
-          lastTouchEnd = now;
-        }, false);
+        window.onload=function () {  
+            document.addEventListener('touchstart',function (event) {  
+                if(event.touches.length>1){  
+                    event.preventDefault();  
+                }  
+            })  
+            var lastTouchEnd=0;  
+            document.addEventListener('touchend',function (event) {  
+                var now=(new Date()).getTime();  
+                if(now-lastTouchEnd<=300){  
+                    event.preventDefault();  
+                }  
+                lastTouchEnd=now;  
+            },false)  
+        }  
     </script>
 </body>
 </html>
