@@ -191,7 +191,7 @@
                         </div>
                     </div>
                     <div class="c-game-stake-container">
-                        <div class="c-game-stake-item-box" v-for="x in 1">
+                        <div class="c-game-stake-item-box" >
                             <div class="c-user-portrait">
                                 <img src="./img/portrait.jpg" alt="">
                                 <div class="c-user-game-name">
@@ -255,8 +255,8 @@
                 checkList: [],      // 多选框
                 checkboxMaxValue: 1,// 多选框最多能选几个
                 xzxqObjArr: [
-                    {way:'挪',amount:1,icon1:'hu',icon2:'yu'},
-                    {way:'单押',amount:1,icon1:'hu',icon2:''}
+//                    {way:'挪',amount:1,icon1:'hu',icon2:'yu'},
+//                    {way:'单押',amount:1,icon1:'hu',icon2:'block'}
                 ]
             },
             created (){
@@ -400,7 +400,7 @@
                                 way:'豹子',
                                 amount:this.value,
                                 icon1:this.gameObjArr[this.checkList[0]].icon,
-                                icon2:''
+                                icon2:'block'
                             };
                             this.xzxqObjArr.push(obj);
                             this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
@@ -457,7 +457,7 @@
                         way:'单押',
                         amount:this.jettonValue,
                         icon1:this.gameObjArr[index].icon,
-                        icon2:''
+                        icon2:'block'
                     };
                     this.xzxqObjArr.push(obj);
                     this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
