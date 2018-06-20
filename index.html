@@ -35,10 +35,19 @@
     <meta name="msapplication-tap-highlight" content="no">
 
     <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/fontsize.js"></script>
-    <script src="./js/vue.min.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .c-arrow:after{
+            content: '';
+            width: 20px;
+            height:20px;
+            background: red;
+            z-index: 1;
+        }
+    </style>
+    <script src="./js/fontsize.js"></script>
+    <script src="./js/vue.min.js"></script>
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
@@ -138,9 +147,9 @@
                         </div>
                         <el-checkbox-group v-model="checkList" @change="chcekBoxChange" :max="checkboxMaxValue">
                             <div class="c-game-item-box">
-                                <div class="c-game-item" v-for="x in gameObjArr" @click="focusGame(x.index)">
+                                <div class="c-game-item" v-for="x in gameObjArr" >
                                     <div class="c-game-word">{{x.name}}</div>
-                                    <div class="c-game-img-grade-box">
+                                    <div class="c-game-img-grade-box" @click="focusGame(x.index)">
                                         <div class="c-game-img">
                                             <img :src=`./img/${x.icon}.png` alt="">
                                         </div>
@@ -186,16 +195,16 @@
                                 </div>
                             </div>
                             <div class="c-stake-item-box">
-                                <div class="c-stake-item" v-for="x in 3">
+                                <div class="c-stake-item" v-for="x in xzxqObjArr">
                                     <div class="c-stake-name">
-                                        <div>单押</div>
-                                        <div style="color: #945340">500</div>
+                                        <div>{{x.way}}</div>
+                                        <div style="color: #945340">{{x.amount}}</div>
+                                    </div>
+                                    <div class="c-stake-one c-arrow">
+                                        <img :src=`./img/${x.icon1}.png` alt="">
                                     </div>
                                     <div class="c-stake-one">
-                                        <img src="./img/hu.png" alt="">
-                                    </div>
-                                    <div class="c-stake-one">
-                                        <img src="./img/hu.png" alt="">
+                                        <img :src=`./img/${x.icon2}.png` alt="">
                                     </div>
                                 </div>
                             </div>
@@ -241,6 +250,9 @@
                 sliderMaxValue: 1,// 滑块最大的值
                 checkList: [],      // 多选框
                 checkboxMaxValue: 1,// 多选框最多能选几个
+                xzxqObjArr: [
+                    {way:'挪',amount:1,icon1:'hu',icon2:'yu'}
+                ]
             },
             created (){
 
@@ -347,7 +359,15 @@
                             this.$message({
                                 message: '挪注成功！',
                                 type: 'success'
-                            })
+                            });
+                            var obj = {
+                              way:'挪',
+                              amount:this.value,
+                              icon1:this.gameObjArr[this.checkList[0]].icon,
+                              icon2:this.gameObjArr[this.checkList[1]].icon
+                            };
+                            this.xzxqObjArr.push(obj);
+                            this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
                         }
                     }
                     if (this.gameStatus == 2) {
@@ -399,7 +419,7 @@
                     }
                     this.swiperVisible = false;
                 },
-                // 选择项目
+                // 下注
                 focusGame (index) {
                     // console.log(index);
                     // this.gameIndex = index;
@@ -413,7 +433,7 @@
                     this.gameObjArr[index].valOne += parseInt(this.jettonValue);
                     this.gameObjArr[index].valTwo += parseInt(this.jettonValue);
                 },
-                // 下注 选择筹码
+                // 选择筹码
                 addJetton (value,index) {
                     this.jettonValue = value;
                     // console.log(index);
