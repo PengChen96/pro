@@ -40,9 +40,13 @@
     <style>
         .c-arrow:after{
             content: '';
-            width: 20px;
-            height:20px;
-            background: red;
+            background:url(./img/arrow.png) no-repeat;
+            background-size: 0.8rem;
+            position: absolute;
+            width: 1rem;
+            height:0.5rem;
+            top: 0px;
+            right:0.2rem;
             z-index: 1;
         }
     </style>
@@ -187,7 +191,7 @@
                         </div>
                     </div>
                     <div class="c-game-stake-container">
-                        <div class="c-game-stake-item-box" v-for="x in 2">
+                        <div class="c-game-stake-item-box" v-for="x in 1">
                             <div class="c-user-portrait">
                                 <img src="./img/portrait.jpg" alt="">
                                 <div class="c-user-game-name">
@@ -195,12 +199,12 @@
                                 </div>
                             </div>
                             <div class="c-stake-item-box">
-                                <div class="c-stake-item" v-for="x in xzxqObjArr">
+                                <div class="c-stake-item" v-for="x in xzxqObjArr" style="position:relative;">
                                     <div class="c-stake-name">
                                         <div>{{x.way}}</div>
                                         <div style="color: #945340">{{x.amount}}</div>
                                     </div>
-                                    <div class="c-stake-one c-arrow">
+                                    <div :class="x.way=='挪'?'c-stake-one c-arrow':'c-stake-one'">
                                         <img :src=`./img/${x.icon1}.png` alt="">
                                     </div>
                                     <div class="c-stake-one">
@@ -251,7 +255,8 @@
                 checkList: [],      // 多选框
                 checkboxMaxValue: 1,// 多选框最多能选几个
                 xzxqObjArr: [
-                    {way:'挪',amount:1,icon1:'hu',icon2:'yu'}
+                    {way:'挪',amount:1,icon1:'hu',icon2:'yu'},
+                    {way:'单押',amount:1,icon1:'hu',icon2:''}
                 ]
             },
             created (){
@@ -390,7 +395,15 @@
                             this.$message({
                                 message: '投注成功！',
                                 type: 'success'
-                            })
+                            });
+                            var obj = {
+                                way:'豹子',
+                                amount:this.value,
+                                icon1:this.gameObjArr[this.checkList[0]].icon,
+                                icon2:''
+                            };
+                            this.xzxqObjArr.push(obj);
+                            this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
                         }
                     }
                     if (this.gameStatus == 3) {
@@ -414,7 +427,15 @@
                             this.$message({
                                 message: '连串成功！',
                                 type: 'success'
-                            })
+                            });
+                            var obj = {
+                                way:'连串',
+                                amount:this.value,
+                                icon1:this.gameObjArr[this.checkList[0]].icon,
+                                icon2:this.gameObjArr[this.checkList[1]].icon
+                            };
+                            this.xzxqObjArr.push(obj);
+                            this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
                         }
                     }
                     this.swiperVisible = false;
@@ -432,6 +453,14 @@
                     }
                     this.gameObjArr[index].valOne += parseInt(this.jettonValue);
                     this.gameObjArr[index].valTwo += parseInt(this.jettonValue);
+                    var obj = {
+                        way:'单押',
+                        amount:this.jettonValue,
+                        icon1:this.gameObjArr[index].icon,
+                        icon2:''
+                    };
+                    this.xzxqObjArr.push(obj);
+                    this.xzxqObjArr = JSON.parse(JSON.stringify(this.xzxqObjArr));
                 },
                 // 选择筹码
                 addJetton (value,index) {
